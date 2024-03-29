@@ -24,6 +24,10 @@ func main() {
 		product.DELETE("/:id", handlers.DeleteProduct(db))
 	}
 
-	router.POST("/register", handlers.Register(db))
+	user := router.Group("/user")
+	{
+		user.POST("/register", handlers.Register(db))
+	}
+
 	router.Run(":8080")
 }
