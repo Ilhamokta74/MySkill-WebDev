@@ -19,11 +19,11 @@ func Register(db *gorm.DB) gin.HandlerFunc {
 
 		// Check If username Is Already Taken
 		var existingUser models.User
-		if err := db.Where("username = ?", input.Username).First(&existingUser).Error; err != nil {
+		if err := db.Where("username = ?", input.Username).First(&existingUser).Error; err == nil {
 			c.JSON(400, gin.H{
 				"message": "Username Already Exists",
 			})
-			// return
+			return
 		}
 
 		// Create New User
@@ -39,7 +39,7 @@ func Register(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		// Opsional, you can generate a token for the new user after registration
+		// Optional: Generate a token for the new user after registration
 		token, err := CreateToken(newUser.ID)
 		if err != nil {
 			c.JSON(500, gin.H{
